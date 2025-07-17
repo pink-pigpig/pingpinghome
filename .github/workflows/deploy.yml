@@ -40,7 +40,7 @@ jobs:
 
       - name: Deploy to GitHub Pages
         env:
-          PP_HOME: ${{ secrets.PP_HOME }}
+          GH_TOKEN: ${{ secrets.PP_HOME }}
         run: |
           cd public/
           git init
