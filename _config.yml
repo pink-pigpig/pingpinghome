@@ -1,10 +1,10 @@
-title: Hexo
-subtitle: ''
-description: ''
-keywords: null
-author: John Doe
-language: en
-timezone: ''
+title: "猪博客"
+subtitle: 'java开发工程师，前端也喜欢'
+description: '只是一个刚刚入门的小猪，目标是全栈开发者你可以在GitHub中pink-pigpig找到我。'
+keywords: 个人博客，前端，后端，开发者
+author: pink-pigpig
+language: zh-CN
+timezone: 'Asia/Shanghai'
 url: https://pink-pigpig.github.io/pingpinghome
 root: /pingpinghome/
 permalink: ':year/:month/:day/:title/'
@@ -59,7 +59,7 @@ pagination_dir: page
 include: null
 exclude: null
 ignore: null
-theme: icarus
+theme: fluid
 deploy:
   type: git
   repo: https://github.com/pink-pigpig/pingpinghome.git

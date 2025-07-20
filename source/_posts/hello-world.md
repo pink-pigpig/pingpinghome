@@ -1,38 +1,51 @@
 ---
-title: Hello World
+title: 你好，我的个人介绍？
 ---
-Welcome to [Hexo](https://hexo.io/)! This is your very first post. Check [documentation](https://hexo.io/docs/) for more info. If you get any problems when using Hexo, you can find the answer in [troubleshooting](https://hexo.io/docs/troubleshooting.html) or you can ask me on [GitHub](https://github.com/hexojs/hexo/issues).
+欢迎来到我的个人博客，本博客主要用于个人学习和笔记展示，方便浏览一路走过来的点点滴滴，如果你有兴趣和我交流，请在github中搜索pink-pigpig给我留言。顺便测试一下链接[我的github](https://github.com/pink-pigpig)
 
-## Quick Start
+## 简单说一些
 
-### Create a new post
-
-``` bash
-$ hexo new "My New Post"
-```
-
-More info: [Writing](https://hexo.io/docs/writing.html)
-
-### Run server
+### 一些碎碎念
 
 ``` bash
-$ hexo server
+测试一下代码块是不是有高亮显示liang
 ```
 
-More info: [Server](https://hexo.io/docs/server.html)
+### 目前安排
+- [x] 前端vue3
+- [x] 后端springBoot
+- [x] 学习前端相关组件——router、vue3、vuex、axios、element
+- [x] 学习后端相关组件——springBoot、mybatis、jwt、redis、
+- [x] 语言：java、javascript、html、css、sql、TypeScript、mysql、微信小程序
+- [ ] 目前其他想要学习的东西：jpa（听说和redis差不多，且看）
+- [ ] 学习方向：ai方向的自动化开发流线（未接触，先写着。）
 
-### Generate static files
 
-``` bash
-$ hexo generate
-```
+### 目前的项目
+#### 赛诺公司——访客管理系统
+- vue3，springBoot，mybatis，jwt，redis，element，axios，oss，typescript，mysql等
+>一款由赛诺公司牵头，提供需求文档，从零开始开发的项目。项目涉及软硬件管理，前后端开发，旨在全面考察个人开发能力。
+>这个项目是我第一次全栈开发的测试，独自完成前后端的所有开发，虽然项目不大，但一整套流程下来，对很多东西都有了感悟，比如，为什么需要前后端的接口文档、数据库设计、技术选型？为什么需要开发规范？以及为什么前后端需要沟通才可以顺利推进项目等。很多东西，只有自己完全去接触后才会有所理解。
+>>特别感谢我这个项目的搭档，陪我一起体会，一人前端一人后端，模拟整个开发的流程。
+---
+1. 从零自主搭建项目，运用vue3加element来实现前端页面的展示，运用SpringBoot快速开发后端。
+2. 从零开始设计需求文档，项目接口文档，数据库表设计，根据文档开发等，熟悉项目开发流程，对开发流程有深刻理解。
+3. 前端利用axios与nodejs来进行网络请求和服务代理，运用element实现图像展示，文件上传等功能。运用vue和ts语言来更好的实现对应的功能。
+4. 后端运用jwt来进行拦截，实现用户鉴权，通过对token的验证来防止未授权访问
+5. 运用aop来进行切面类开发，实现对通用字段的自动填写，和对接口的处理时间统计。通过redis来对一些频繁访问的数据进行缓存，减少对数据库的压力，同时对验证码这类时效性信息设计过期时间，提高系统安全性
+6. 运用MyBatis对数据库进行操作，实现数据存储功能。
+---
+#### 粉猪博客
+- Vue、axios、ElementUI、vue-echarts、mavon-editor、vue-router、SpringBoot、SpringSecurity、MyBatis、部分接口遵循Restful风格、MySQL
 
-More info: [Generating](https://hexo.io/docs/generating.html)
+>这个项目是我一直以来想做的，我认为这是一个很适合我开始的项目，可以记录自己一路学习的过程，也可以分享一些自己的事，顺便学习一下新的技术和开发方式。
 
-### Deploy to remote sites
+1.对与这个项目我想大家见怪不怪了，vue和springboot都是很熟悉的东西，所以学习起来很简单。
+2.这次学习主要是在部署和怎么把网页托管上，我用的是gitpage，和hexo来进行搭建，所以过程很顺利。
+3.学习用SpringSecurity来进行认证，学习用jpa来进行数据库操作。一方面是之前学的jwt有点区别，另一方面mybatis和jpa的用法也一样，所以学习起来很轻松。两者思想有所区别，但是很相似。
+4.这个项目边做边学，日后会成为个人笔记和补充，后面添加新的项目也会在这里提一下。
 
-``` bash
-$ hexo deploy
-```
+### 学习路程
 
-More info: [Deployment](https://hexo.io/docs/one-command-deployment.html)
+
+
