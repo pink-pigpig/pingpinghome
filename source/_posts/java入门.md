@@ -5,6 +5,7 @@ categories: 阶段总结
 tags:
 - java
 - 学习过程
+index_img: https://qjw-00.oss-cn-guangzhou.aliyuncs.com/%E4%B8%AA%E4%BA%BA%E4%BD%BF%E7%94%A8%E5%AD%98%E5%82%A8/PixPin_2025-07-21_15-36-42.jpg
 ---
 # 1. java入门
 ## 2. java基础（两个月）

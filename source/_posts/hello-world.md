@@ -1,5 +1,6 @@
 ---
 title: 你好，我的个人介绍？
+index_img: https://qjw-00.oss-cn-guangzhou.aliyuncs.com/%E4%B8%AA%E4%BA%BA%E4%BD%BF%E7%94%A8%E5%AD%98%E5%82%A8/PixPin_2025-07-21_15-30-26.jpg
 ---
 欢迎来到我的个人博客，本博客主要用于个人学习和笔记展示，方便浏览一路走过来的点点滴滴，如果你有兴趣和我交流，请在github中搜索pink-pigpig给我留言。顺便测试一下链接[我的github](https://github.com/pink-pigpig)
 
