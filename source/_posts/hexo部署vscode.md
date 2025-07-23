@@ -33,7 +33,7 @@ index_img: https://qjw-00.oss-cn-guangzhou.aliyuncs.com/%E4%B8%AA%E4%BA%BA%E4%BD
 打开vscode，在终端输入以下命令
 ``` bash
 npm install -g hexo-cli
-hexo init blog（这一句可以省略）
+hexo init blog（这一句可以省略blog）
 cd blog（这一句可以省略）
 npm install
 ```
