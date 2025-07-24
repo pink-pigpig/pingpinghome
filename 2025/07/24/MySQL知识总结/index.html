@@ -1,0 +1,791 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/pingpinghome/img/fluid.png">
+  <link rel="icon" href="/pingpinghome/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="pink-pigpig">
+  <meta name="keywords" content="个人博客，前端，后端，开发者">
+  
+    <meta name="description" content="MYSQL 1.MYSQL优化问题 一、如何定位慢查询？ 原因：  聚合查询 多表查询 表数据量过大查询 深度分页查询 表象：页面加载过慢、接口压测响应时间超过1s  工具：   调试工具：arthas   运维工具：prometheus、skywalking   MYSQL中自带的慢日志查询，需要配置开启和设置慢日志的时间。    回答：先介绍自己的场景+用的工具+扩展自己知道的其他知识 二、定">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MySQL知识总结">
+<meta property="og:url" content="https://pink-pigpig.github.io/pingpinghome/2025/07/24/MySQL%E7%9F%A5%E8%AF%86%E6%80%BB%E7%BB%93/index.html">
+<meta property="og:site_name" content="猪博客">
+<meta property="og:description" content="MYSQL 1.MYSQL优化问题 一、如何定位慢查询？ 原因：  聚合查询 多表查询 表数据量过大查询 深度分页查询 表象：页面加载过慢、接口压测响应时间超过1s  工具：   调试工具：arthas   运维工具：prometheus、skywalking   MYSQL中自带的慢日志查询，需要配置开启和设置慢日志的时间。    回答：先介绍自己的场景+用的工具+扩展自己知道的其他知识 二、定">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://qjw-00.oss-cn-guangzhou.aliyuncs.com/%E4%B8%AA%E4%BA%BA%E4%BD%BF%E7%94%A8%E5%AD%98%E5%82%A8/mysql.webp">
+<meta property="article:published_time" content="2025-07-24T06:51:29.000Z">
+<meta property="article:modified_time" content="2025-07-24T15:08:59.818Z">
+<meta property="article:author" content="pink-pigpig">
+<meta property="article:tag" content="学习过程">
+<meta property="article:tag" content="数据库">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://qjw-00.oss-cn-guangzhou.aliyuncs.com/%E4%B8%AA%E4%BA%BA%E4%BD%BF%E7%94%A8%E5%AD%98%E5%82%A8/mysql.webp">
+  
+  
+  
+  <title>MySQL知识总结 - 猪博客</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/pingpinghome/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/pingpinghome/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/pingpinghome/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"pink-pigpig.github.io","root":"/pingpinghome/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/pingpinghome/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/pingpinghome/js/utils.js" ></script>
+  <script  src="/pingpinghome/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/pingpinghome/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/pingpinghome/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/pingpinghome/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/pingpinghome/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/pingpinghome/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/pingpinghome/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/pingpinghome/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="MySQL知识总结"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-07-24 14:51" pubdate>
+          2025年7月24日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          1.6k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          14 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">MySQL知识总结</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1>MYSQL</h1>
+<h2 id="1-MYSQL优化问题">1.MYSQL优化问题</h2>
+<h3 id="一、如何定位慢查询？">一、如何定位慢查询？</h3>
+<p><strong>原因：</strong></p>
+<ul>
+<li>聚合查询</li>
+<li>多表查询</li>
+<li>表数据量过大查询</li>
+<li>深度分页查询</li>
+<li>表象：页面加载过慢、接口压测响应时间超过1s</li>
+</ul>
+<p><strong>工具</strong>：</p>
+<ul>
+<li>
+<p>调试工具：arthas</p>
+</li>
+<li>
+<p>运维工具：prometheus、<strong>skywalking</strong></p>
+</li>
+<li>
+<p>MYSQL中自带的慢日志查询，需要配置开启和设置慢日志的时间。</p>
+<p><img src="C:%5CUsers%5C14376%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20250521093312135.png" srcset="/pingpinghome/img/loading.gif" lazyload alt="image-20250521093312135"></p>
+</li>
+</ul>
+<p><strong>回答</strong>：先介绍自己的场景+用的工具+扩展自己知道的其他知识</p>
+<h3 id="二、定位到了语句之后，如何分析呢？">二、定位到了语句之后，如何分析呢？</h3>
+<p><strong>工具/语句：</strong></p>
+<p>在语句面前添加<strong>EXPLAN或者DESC</strong></p>
+<ul>
+<li>possible-keys：当前sql可能用到的索引</li>
+<li><strong>key：实际命中的索引</strong></li>
+<li><strong>key-len：索引占用的大小</strong></li>
+<li><strong>extra：额外的优化建议，是否出现了回表（如果出现using index condition 就表明有优化的空间）</strong></li>
+<li><strong>type</strong>：连接类型，性能由好到坏：NULL、system、<strong>const（主键查询）、eqref（唯一索引或者主键索引查询）、ref（索引查询）、range（范围查询）</strong>、index（全索引查询）、all（全盘扫描）</li>
+</ul>
+<p><strong>回答</strong>：</p>
+<p>面试官：那这个SQL语句执行很慢，如何分析呢？<br>
+候选人：如果一条sgl执行很慢的话，我们通常会使用mysal自动的执行计划explain来去查看这条sql的执行情况，</p>
+<p>比如在这里面可以通过key和key_len检查是否命中了索引，如果本身已经添加了索引，也可以判断索引是否有失效的情况，第二个，可以通过yp字段查看sql是否有进一步的优化空间，是否存在全索引扫描或全盘扫描，第三个可以通过extra建议来判断，是否出现了回表的情况，如果出现了，可以尝试添加索引或修改返回字段来修复</p>
+<h3 id="三、什么是索引？">三、什么是索引？</h3>
+<p><strong>回答</strong>（定义+特点）</p>
+<ul>
+<li><strong>索引(index)是帮助MySQL高效获取数据的数据结构（有序）</strong></li>
+<li>提高数据检索的效率，降低数据库的IO成本（不需要全表扫描）</li>
+<li>通过索引列对数据进行排序（B+树），降低数据排序的成本，降低了CPU的消耗</li>
+</ul>
+<h3 id="四、索引的底层（B-树和特点）">四、索引的底层（B+树和特点）</h3>
+<p>​	mysql的inmoDB引擎采用的是B+树的数据结构来存储索引</p>
+<ul>
+<li>
+<p>阶数更多，路径更短</p>
+</li>
+<li>
+<p>磁盘读写代价B+树更低，<strong>非叶子节点只存储指针</strong>，叶子阶存储数据</p>
+</li>
+<li>
+<p>B+树便于扫库和区间查询，叶子节点是一个<strong>双向链表</strong></p>
+<p>可能会问B+树和B树的区别</p>
+</li>
+</ul>
+<h3 id="五、什么是聚簇索引？">五、什么是聚簇索引？</h3>
+<p><strong>回答</strong></p>
+<ul>
+<li><strong>聚簇索引（聚集索引）</strong>：数据和索引放到一块，B+树的叶子节点保存整行数据，有且只有一个</li>
+<li><strong>非聚簇索引（二级索引）</strong>：数据和索引分开存储，B+树的叶子节点保存对应的主键，可以有多个</li>
+</ul>
+<h3 id="六、什么是回表查询？">六、什么是回表查询？</h3>
+<p><strong>回答</strong>（五+六）</p>
+<ul>
+<li>通过二级索引查找到主键值，到聚集索引中查找整行数据，这个过程就是回表查询。</li>
+</ul>
+<h3 id="七、覆盖索引">七、覆盖索引</h3>
+<p><strong>回答</strong></p>
+<p>覆盖索引是指查询使用了索引，返回的列，必须在索引中全部能够找到</p>
+<ul>
+<li>使用id查询（主键），直接走聚集索引查询，一次索引扫描，直接返回整行数据，效率高</li>
+<li>如果返回的列中没有所要查询的字段，有可能会触发回表查询，所以尽量避免用select*</li>
+</ul>
+<h3 id="八、超大分页如何处理">八、超大分页如何处理</h3>
+<p><strong>定义</strong></p>
+<p>在数据量比较大时，如果进行limit分页查询，在查询时，越往后，效率越低</p>
+<p><strong>回答</strong></p>
+<p>可以用覆盖索引+子查询来解决。</p>
+<p><img src="C:%5CUsers%5C14376%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20250521182106204.png" srcset="/pingpinghome/img/loading.gif" lazyload alt="image-20250521182106204"></p>
+<p><img src="C:%5CUsers%5C14376%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20250521182109221.png" srcset="/pingpinghome/img/loading.gif" lazyload alt="image-20250521182109221"></p>
+<blockquote>
+<p><strong>面试官：知道什么叫覆盖索引嘛？</strong><br>
+候选人：嗯~，清楚的<br>
+覆盖索引是指select查询语句使用了索引，在返回的列，必须在索引中全部能够找到，如果我们使用id查询，它会直接走聚集索引查询，一次索引扫描，直接返回数据，性能高。<br>
+如果按照二级索引查询数据的时候，返回的列中没有创建索引，有可能会触发回表查询，尽量避免使用select*,尽量在返回的列中都包含添加索引的字段<br>
+<strong>面试官：MYSQL超大分页怎么处理？</strong><br>
+候选人：嗯，超大分页一般都是在数据量比较大时，我们使用了Iit分页查询，并且需要对数据进行<br>
+排序，这个时候效率就很低，我们可以采用覆盖索引和子查询来解决<br>
+先分页查询数据的id字段，确定了id之后，再用子查询来过滤，只查询这个id列表中的数据就可以了<br>
+因为查询i的时候，走的覆盖索引，所以效率可以提升很多</p>
+</blockquote>
+<h3 id="九、索引创建的原则（1256要提及）">九、索引创建的原则（1256要提及）</h3>
+<ol>
+<li><strong>数据量较大，且查询频繁的表（单表超过10万数据）</strong></li>
+<li><strong>常作为查询条件、排序、分组（where、order by 、 group by）操作</strong></li>
+<li>尽量选择<strong>区分度高</strong>的列作为索引，区分度越高，效率越高</li>
+<li>如果是字符串类型的字段，可以利用<strong>字符串的特点建立前缀索引</strong></li>
+<li><strong>尽量使用联合索引</strong>，查询时很多时候联合索引可以覆盖索引，节省存储空间，避免回表。</li>
+<li><strong>控制索引数量</strong></li>
+<li>如果索引列不能存NULL要加<strong>not null</strong>！！</li>
+</ol>
+<h3 id="十、索引失效">十、索引失效</h3>
+<p><strong>判断标准</strong></p>
+<ul>
+<li>违反了最左前缀法则</li>
+<li>范围查询右边的列是无法使用范围索引的</li>
+<li>不要再索引列上进行运算操作，否则索引失效</li>
+<li>字符串不加单引号</li>
+<li>以like开头的模糊索引会导致失效</li>
+</ul>
+<p><strong>工具</strong></p>
+<p>执行计划explain</p>
+<h3 id="十一、sql的优化经验">十一、sql的优化经验</h3>
+<ul>
+<li>表的设计优化</li>
+<li>索引优化  		（<strong>九+十</strong>）</li>
+<li>sql语句的优化</li>
+<li>主从复制，读写分离</li>
+<li>分库分表</li>
+</ul>
+<h4 id="表的设计优化（参考阿里开发手册）">表的设计优化（参考阿里开发手册）</h4>
+<ol>
+<li>设置合适的数值，根据实际情况选择（tinyint int bigint）</li>
+<li>char和varchar，char定长效率高，var可变长度，效率低一些</li>
+</ol>
+<h4 id="sql语句的优化">sql语句的优化</h4>
+<ol>
+<li>select语句避免*</li>
+<li>sql避免索引失效</li>
+<li>union all 代替 union ，union会多一次过滤，效率低</li>
+<li>避免where子句中对字段进行表达式操作</li>
+<li>join优化，能用innerjoin就不用左右join，如果要用，一定要以小表为驱动，内连接会对两个表进行优化，优先把小表放外边，大表放里边，左右join不会重新排序</li>
+</ol>
+<h2 id="2-事务">2.事务</h2>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/pingpinghome/categories/%E9%9D%A2%E8%AF%95%E7%9F%A5%E8%AF%86/" class="category-chain-item">面试知识</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/pingpinghome/tags/%E5%AD%A6%E4%B9%A0%E8%BF%87%E7%A8%8B/" class="print-no-link">#学习过程</a>
+      
+        <a href="/pingpinghome/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/" class="print-no-link">#数据库</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>MySQL知识总结</div>
+      <div>https://pink-pigpig.github.io/pingpinghome/2025/07/24/MySQL知识总结/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>pink-pigpig</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年7月24日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/pingpinghome/2025/07/24/hello-world/" title="你好，我的个人介绍？">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">你好，我的个人介绍？</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/pingpinghome/2025/07/23/redis%E7%9F%A5%E8%AF%86%E6%80%BB%E7%BB%93/" title="redis知识总结">
+                        <span class="hidden-mobile">redis知识总结</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/pingpinghome/js/events.js" ></script>
+<script  src="/pingpinghome/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/pingpinghome/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/pingpinghome/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/pingpinghome/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
