@@ -5,6 +5,7 @@ tags:
 - redis
 - 入门知识
 categories: 面试知识
+categories: 入门知识
 index_img: https://qjw-00.oss-cn-guangzhou.aliyuncs.com/%E4%B8%AA%E4%BA%BA%E4%BD%BF%E7%94%A8%E5%AD%98%E5%82%A8/redis.jpg
 ---
 # redis学习与使用
