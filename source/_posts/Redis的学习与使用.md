@@ -4,7 +4,6 @@ date: 2025-08-13T12:27:01+08:00
 tags:
 - redis
 - 入门知识
-categories: 面试知识
 categories: 入门知识
 index_img: https://qjw-00.oss-cn-guangzhou.aliyuncs.com/%E4%B8%AA%E4%BA%BA%E4%BD%BF%E7%94%A8%E5%AD%98%E5%82%A8/redis.jpg
 ---
@@ -467,4 +466,83 @@ public class SpringDataRedisTest {
         redisTemplate.delete("mylist");
     }
 ```
+## 五、简化方式
 
+### 5.1 Spring Cache
+
+#### 5.1.1 介绍
+
+Spring Cache 是一个框架，实现了基于注解的缓存功能，只需要简单地加一个注解，就能实现缓存功能。
+
+Spring Cache 提供了一层抽象，底层可以切换不同的缓存实现，例如：
+
+- EHCache
+- Caffeine
+- Redis(常用)
+
+**起步依赖：**
+
+```xml
+<dependency>
+	<groupId>org.springframework.boot</groupId>
+	<artifactId>spring-boot-starter-cache</artifactId>  		            		       	 <version>2.7.3</version> 
+</dependency>
+```
+
+
+
+#### 5.1.2 常用注解
+
+在SpringCache中提供了很多缓存操作的注解，常见的是以下的几个：
+
+| **注解**       | **说明**                                                     |
+| -------------- | ------------------------------------------------------------ |
+| @EnableCaching | 开启缓存注解功能，通常加在启动类上                           |
+| @Cacheable     | 在方法执行前先查询缓存中是否有数据，如果有数据，则直接返回缓存数据；如果没有缓存数据，调用方法并将方法返回值放到缓存中 |
+| @CachePut      | 将方法的返回值放到缓存中                                     |
+| @CacheEvict    | 将一条或多条数据从缓存中删除                                 |
+
+在spring boot项目中，使用缓存技术只需在项目中导入相关缓存技术的依赖包，并在启动类上使用@EnableCaching开启缓存支持即可。
+
+例如，使用Redis作为缓存技术，只需要导入Spring data Redis的maven坐标即可。
+
+
+
+**注解的属性**
+
+:bulb:**注意：**cachename：用于制定操作的Redis表
+
+key：用于制定对于的key，可以用spel语法来书写，进入源码即可查看。
+
+举个例子：
+
+```java
+@Cacheable(cacheNames = "setmealcache" ,key = "#categoryId")
+//在方法执行前先查询缓存中是否有数据，如果有数据，则直接返回缓存数据；如果没有缓存数据，调用方法并将方法返回值放到缓存中
+```
+
+```java
+@CacheEvict(cacheNames = "setmealcache", key = "#setmealDTO.categoryId")
+```
+
+```java
+@CacheEvict(cacheNames = "setmealcache",allEntries = true)
+//全部删除
+//将一条或多条数据从缓存中删除
+```
+
+
+
+
+
+### 5.2 具体的实现思路
+
+具体的实现思路
+
+如下:
+
+- 导入Spring Cache和Redis相关maven坐标
+
+- 在启动类上加入@EnableCaching注解，开启缓存注解功能
+
+- 在接口Controller的l方法上加入@Cacheable、@CachePut、@CacheEvict注解
