@@ -1,0 +1,955 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/pingpinghome/img/fluid.png">
+  <link rel="icon" href="/pingpinghome/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="pink-pigpig">
+  <meta name="keywords" content="个人博客，前端，后端，开发者">
+  
+    <meta name="description" content="redis 一、redis三兄弟  穿透 击穿 雪崩  穿透 穿透是指，查询一个不存在的数据，mysql查询不到，也不会写入缓存，导致每一次请求都会查询数据库，大量的请求导致宕机。 原因是：①：可能是路径被人恶意攻击，redis没有相对应的数据，所以去查询数据库，但大量的查询操作执行的时候，数据库就会被压垮。 解决：  布隆过滤器 null返回   击穿 击穿是指，当某一个key过期的时候，大量请">
+<meta property="og:type" content="article">
+<meta property="og:title" content="redis知识总结">
+<meta property="og:url" content="https://pink-pigpig.github.io/pingpinghome/2025/07/23/redis%E7%9F%A5%E8%AF%86%E6%80%BB%E7%BB%93/index.html">
+<meta property="og:site_name" content="猪博客">
+<meta property="og:description" content="redis 一、redis三兄弟  穿透 击穿 雪崩  穿透 穿透是指，查询一个不存在的数据，mysql查询不到，也不会写入缓存，导致每一次请求都会查询数据库，大量的请求导致宕机。 原因是：①：可能是路径被人恶意攻击，redis没有相对应的数据，所以去查询数据库，但大量的查询操作执行的时候，数据库就会被压垮。 解决：  布隆过滤器 null返回   击穿 击穿是指，当某一个key过期的时候，大量请">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://qjw-00.oss-cn-guangzhou.aliyuncs.com/%E4%B8%AA%E4%BA%BA%E4%BD%BF%E7%94%A8%E5%AD%98%E5%82%A8/redis.jpg">
+<meta property="article:published_time" content="2025-07-23T07:24:05.000Z">
+<meta property="article:modified_time" content="2025-08-20T18:56:46.160Z">
+<meta property="article:author" content="pink-pigpig">
+<meta property="article:tag" content="学习过程">
+<meta property="article:tag" content="redis">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://qjw-00.oss-cn-guangzhou.aliyuncs.com/%E4%B8%AA%E4%BA%BA%E4%BD%BF%E7%94%A8%E5%AD%98%E5%82%A8/redis.jpg">
+  
+  
+  
+  <title>redis知识总结 - 猪博客</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/pingpinghome/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/pingpinghome/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/pingpinghome/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"pink-pigpig.github.io","root":"/pingpinghome/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/pingpinghome/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/pingpinghome/js/utils.js" ></script>
+  <script  src="/pingpinghome/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/pingpinghome/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/pingpinghome/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/pingpinghome/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/pingpinghome/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/pingpinghome/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/pingpinghome/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/pingpinghome/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="redis知识总结"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-07-23 15:24" pubdate>
+          2025年7月23日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          4.1k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          34 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">redis知识总结</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1>redis</h1>
+<h2 id="一、redis三兄弟">一、redis三兄弟</h2>
+<ul>
+<li>穿透</li>
+<li>击穿</li>
+<li>雪崩</li>
+</ul>
+<h3 id="穿透"><strong>穿透</strong></h3>
+<p>穿透是指，查询一个不存在的数据，mysql查询不到，也不会写入缓存，导致每一次请求都会查询数据库，大量的请求导致宕机。</p>
+<p>原因是：①：可能是路径被人恶意攻击，redis没有相对应的数据，所以去查询数据库，但大量的查询操作执行的时候，数据库就会被压垮。</p>
+<p>解决：</p>
+<ul>
+<li>布隆过滤器</li>
+<li>null返回</li>
+</ul>
+<p><img src="https://qjw-00.oss-cn-guangzhou.aliyuncs.com/%E4%B8%AA%E4%BA%BA%E4%BD%BF%E7%94%A8%E5%AD%98%E5%82%A8/%E5%B8%83%E9%9A%86%E8%BF%87%E6%BB%A4%E5%99%A8.jpg" srcset="/pingpinghome/img/loading.gif" lazyload alt=""></p>
+<h3 id="击穿"><strong>击穿</strong></h3>
+<p>击穿是指，当某一个key过期的时候，大量请求无法在redis中查询，转而去数据库查询，一时间大量的查询导致数据库压力过大。</p>
+<p>原因是：①：key过期了</p>
+<p>解决：</p>
+<ul>
+<li>加锁，分布式锁。<strong>互斥锁</strong>（保证强一致性、性能差一点）</li>
+<li>逻辑过期（高可用、性能优）</li>
+</ul>
+<p><img src="https://qjw-00.oss-cn-guangzhou.aliyuncs.com/%E4%B8%AA%E4%BA%BA%E4%BD%BF%E7%94%A8%E5%AD%98%E5%82%A8/%E7%BC%93%E5%AD%98%E5%87%BB%E7%A9%BF.jpg" srcset="/pingpinghome/img/loading.gif" lazyload alt=""></p>
+<h3 id="雪崩"><strong>雪崩</strong></h3>
+<p>雪崩是指在同一时间段大量的缓存key同时失效，或者redis宕机，导致大量的请求到数据库，带来巨大的压力。</p>
+<p>原因：key失效，redis宕机</p>
+<p>解决：</p>
+<ul>
+<li>给不同的key设置TTL随机过期值</li>
+<li>利用redis集群提高服务的可用性       <strong>哨兵模式，集群模式</strong></li>
+<li>给缓存业务添加降级限流策略            <strong>ngxin或spring cloud gateway</strong></li>
+<li>多级缓存                                               <strong>guava或者caffeine</strong></li>
+</ul>
+<h2 id="二、双写一致性（redis和数据库）">二、双写一致性（redis和数据库）</h2>
+<p><strong>这种问题要结合业务进行回答，切记切记</strong></p>
+<h3 id="双写一致性">双写一致性</h3>
+<p>当修改了数据库的数据时，需要同时去更新缓存的数据，缓存要和数据库的数据保持一致</p>
+<p>读操作：读取命中直接返回，不命中查询数据库，写入缓存，再返回。</p>
+<p>写操作：<strong>延迟双删</strong></p>
+<p>我们要延迟双删（删除缓存→删除数据库→删除缓存），原因是数据库双写不一致的问题。</p>
+<h3 id="需要强一致的话"><strong>需要强一致的话</strong></h3>
+<p>分布式锁：</p>
+<p><strong>在读的时候添加共享锁，再写的时候添加排它锁。</strong></p>
+<p>共享锁：其他线程也可以读</p>
+<p>排它锁：其他线程无法进行读写操作</p>
+<p><strong>特点</strong>：强一致性，性能低</p>
+<h3 id="不需要强一致性的话（最终一致性）"><strong>不需要强一致性的话（最终一致性）</strong></h3>
+<p><strong>异步通知：MQ和canal</strong></p>
+<p>cannal：对代码无侵入，伪装mysql的一个从节点</p>
+<ul>
+<li>主要是监听binlog文件，当数据库改变的时候，就会通知缓存变更情况。进行数据更新。</li>
+</ul>
+<p>MQ：主要依靠 MQ的可靠性</p>
+<ul>
+<li>修改数据的时候，就会有消息通知MQ，然后MQ监听缓存进行数据更新。</li>
+</ul>
+<h2 id="三、持久化">三、持久化</h2>
+<h3 id="RDB">RDB</h3>
+<p>RDB：也就是redis的快照，简单来说就是把内存中的所有数据写入到磁盘中。当redis故障重启的时候，从磁盘读取快照，恢复数据</p>
+<p>保存命令：</p>
+<ul>
+<li>
+<p>save：主进程执行，</p>
+</li>
+<li>
+<p>bgsave:子程序进行运行，避免主程序收到影响（fork），子进程<strong>共享</strong>主进程的内存数据。原因是页表相同映射。</p>
+<p>页表：记录虚拟地址与物理地址的映射关系。</p>
+</li>
+<li></li>
+</ul>
+<h3 id="AOF">AOF</h3>
+<p>AOF全称为append only File（追加文件）。redis处理的每一个写命令都会记录在AOF文件，可以看作是命令日志文件。</p>
+<p>默认是关闭的，redis.conf来开启，也可以通过文件来修改频率。</p>
+<ul>
+<li>always：同步刷盘（可靠性高，几乎不丢失数据，但性能影响大）</li>
+<li>everysec：每秒刷盘（适中，最多丢失一秒的数据）</li>
+<li>no：操作系统控制（性能最高，可靠性差，可能丢失大量数据。</li>
+</ul>
+<p>AOF的文件比RDB大，会记录一个key的多次操作但<strong>只有最后一次操作有效</strong>，通过执行bgrewriteaof来进行文件重写，用最少的命令达到一样的效果。</p>
+<p>redis在触发阈值时会自动去重写AOF文件。阈值同样可以进行设置。</p>
+<h3 id="两者的区别">两者的区别</h3>
+<p>主要优缺点，RDB文件小，二进制，速度快，但是有丢失的风险。AOF文件大、速度慢，但是风险小。</p>
+<p><img src="https://qjw-00.oss-cn-guangzhou.aliyuncs.com/%E4%B8%AA%E4%BA%BA%E4%BD%BF%E7%94%A8%E5%AD%98%E5%82%A8/RDB%E5%92%8CAOF%E7%9A%84%E5%8C%BA%E5%88%AB.jpg" srcset="/pingpinghome/img/loading.gif" lazyload alt=""></p>
+<h2 id="四、数据过期策略">四、数据过期策略</h2>
+<p>但key过期的时候，redis会立刻删除吗？</p>
+<p>并不会！删除策略有两种，惰性删除和定时删除。</p>
+<h3 id="1-惰性删除">1. 惰性删除</h3>
+<p>当我们设置了过期时间之后，我们就不去管它了，<strong>只有用到这个key的时候才会去判断是否过期，如果过期就删除</strong>。</p>
+<ul>
+<li>优点：对cpu很友好，只有使用的时候才会去调用过期检查，节省资源</li>
+<li>缺点：对内存很不友好，若是不调用，它就一直呆在内存之中，浪费内存。</li>
+</ul>
+<h3 id="2-定时删除">2. 定时删除</h3>
+<p>每隔一段时间，就对一些key进行检查，删除里面的过期key（从一定量的数据库中，取出一定数量的<strong>随机</strong>key进行检查，并删除过期的key）</p>
+<h4 id="2-1-SLOW">2.1 SLOW</h4>
+<p>慢模式，定时删除，每次删除的间隔为10hz，也就是一秒十次（100ms/次），每次不超过25ms，可以通过配置文件中的HZ选项进行设置，来调整</p>
+<h4 id="2-2-FAST">2.2 FAST</h4>
+<p>快模式，执行的频率不固定，但执行间隔不低于2ms，每次耗时1ms。</p>
+<h4 id="2-3-优缺点">2.3 优缺点</h4>
+<p>有点：通过限制频率来减少对于cpu的影响，同时也可以释放内存</p>
+<p>缺点：难以确定删除操作的频率和时长。</p>
+<h2 id="五、数据淘汰策略">五、数据淘汰策略</h2>
+<p>假如缓存过多，内存满了怎么办？</p>
+<h3 id="数据淘汰策略：8种">数据淘汰策略：8种</h3>
+<ul>
+<li>
+<p>noeviction：默认，表示当内存满的时候不再添加新的key</p>
+</li>
+<li>
+<p>volatile-ttl：对设置了ttl的key进行判断，越小，就越先被淘汰</p>
+</li>
+<li>
+<p>allkeys-random：对所有的key进行随机淘汰</p>
+</li>
+<li>
+<p>volatile-random：对设置了ttl的key进行随机判断</p>
+</li>
+<li>
+<p>allkeys-lru：对所有的key执行lru策略，最后一次访问越久越先淘汰</p>
+</li>
+<li>
+<p>volatile-lru：对设置了ttl的key执行lru策略。</p>
+</li>
+<li>
+<p>allkeys-lfu：对所有的key执行lfu策略，访问次数越少的，越先淘汰</p>
+</li>
+<li>
+<p>volatile-lfu：对设置了ttl的key执行lfu策略，访问次数越少的，越先淘汰</p>
+</li>
+</ul>
+<p><strong>重点在于，要记住lru策略和lfu策略。lru（recently最少最近）lfu（frequently熟悉的最少评率）</strong></p>
+<p>对于使用什么策略的建议。</p>
+<ul>
+<li>优先使用<strong>allkeys-lru</strong>来进行淘汰，如果业务有明显的冷热数据区分，推荐这个方法</li>
+<li>如果业务中的数据没有冷热区分，访问的频率也差不多，推荐用<strong>allkeys-random</strong></li>
+<li>如果业务中有置顶的需求，那就可以用<strong>volatile-lru</strong>，对置顶数据不进行ttl的设置，只会淘汰其他数据。</li>
+<li>如果时短时高频的需求，用<strong>lfu</strong>的两个策略。</li>
+</ul>
+<h3 id="问题：">问题：</h3>
+<p>1.数据库有1000万的数据，redis只能存20万，如何保证redis中都是热点数据呢？</p>
+<p>答：用allkeys-lru来进行淘汰，删除最长时间访问的数据，保留热数据。</p>
+<p>2.redis的内存用完了会发生什么？</p>
+<p>答：数据淘汰，看你是什么设置，如果是默认norviction会直接报错。</p>
+<h2 id="六、分布式锁">六、分布式锁</h2>
+<h3 id="1-导读">1. 导读</h3>
+<p>例子，抢卷服务，会员兑换码等</p>
+<p>如果有最后一张卷，结果是两个进程查询到了卷，先后获得了优惠卷，最后会导致票数超限。</p>
+<p>为了解决这个问题，我们可以加锁。</p>
+<p>如果是一台服务器中，我们可以直接用synchronized（this）{}来进行锁的限制，可以解决这个问题。</p>
+<p>** 但是！！！**在实际开发中，我们的程序时部署在多个服务器中的，这个时候synchronized锁就只能在一台服务器中使用，无法防止上述超限的问题发生。</p>
+<p>这个时候就要用到分布式锁。</p>
+<p>原理：</p>
+<p>分布式锁的原理很简单，那就是拿一个中间人作为锁的管理，由它来监控锁。这里用的是redis。当8080服务器获取锁成功后，就给分布式锁做个标记，告诉分布式锁8080中的线程1已经获取锁了。</p>
+<p>此后，其他服务器8081想要获得锁，分布式锁就会拒绝这个请求，加锁失败，程序进入阻塞状态。</p>
+<h3 id="2-redission实现">2. redission实现</h3>
+<h4 id="2-1-redis实现的分布式锁">2.1 redis实现的分布式锁</h4>
+<p>对于redis实现分布式锁来说，用的是setNX来进行设置</p>
+<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs cmd">//获得锁<br><span class="hljs-built_in">SET</span> lock value NX EX <span class="hljs-number">10</span><br>//释放锁<br><span class="hljs-built_in">DEL</span> key<br></code></pre></td></tr></table></figure>
+<p>EX来设置它的过期时间，那么就有新的问题，这个过期时间多少合适？</p>
+<p>解决办法有两个：①预估服务的时间后判断 ②看门狗自动续期</p>
+<p>显然是第二个啊，看门狗机制来延长服务的时间，防止服务过期。一般这个续期的时间是服务设置时间的1/3。看门狗需要手动去通知停止。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs JAVA"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">redisLock</span><span class="hljs-params">()</span><span class="hljs-keyword">throws</span> InterruptedException&#123;<br>    <span class="hljs-comment">//获取锁（重入锁），执行锁的名称</span><br>    <span class="hljs-type">RLock</span> <span class="hljs-variable">lock</span> <span class="hljs-operator">=</span> redissonClient.getLock( s:<span class="hljs-string">&quot;heimalock&quot;</span>);<br>    <span class="hljs-comment">//尝试获取锁，参数分别是：获取锁的最大等待时间（期间会重试），锁自动释放时间，时间单位</span><br>    <span class="hljs-comment">//boolean isLock = lock.tryLock(10,30，TimeUnit.SEC0NDS);</span><br>    <span class="hljs-type">boolean</span> <span class="hljs-variable">isLock</span> <span class="hljs-operator">=</span> lock.tryLock(time:<span class="hljs-number">10</span>，TimeUnit.SEC0NDS);<br>    <span class="hljs-comment">//判断是否获取成功加锁、设置过期时间等操作都是基于lua脚本完成</span><br>    <span class="hljs-keyword">if</span> （isLock）&#123;<br>        <span class="hljs-keyword">try</span>&#123;<br>            System.out.println（<span class="hljs-string">&quot;执行业务&quot;</span>）;<br>        &#125;<br>        <span class="hljs-keyword">finally</span><br>    &#123;<br>            <span class="hljs-comment">//释放锁</span><br>            lock.unlock();<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>💡**注意:**如果手动设置了过期时间，那么看门狗机制就会失效，redis认为你可以自己管理时间。默认30s关闭时间。</p>
+<p>💡**注意:**在底层中是用SETNX和lua脚本实现的。</p>
+<h4 id="2-2-redisson实现的分布式锁">2.2 redisson实现的分布式锁</h4>
+<p>💡：redisson中的分布式锁是可以重入的，而redis不可以。</p>
+<p>重入锁是一种累计的重入次数值。</p>
+<p>其中key是自己定义的唯一标识，而value是重入的个数。</p>
+<p>分布式锁如何解决一致性的问题呢？</p>
+<p>在服务写入数据的时候，redis宕机了，导致数据无法正常操作，这是后按照redis的机制，挑选从节点成为主节点。此时，就会出现两个线程有同一个锁。</p>
+<p>为了解决这个问题，redis提供了红锁。（N/2  +1 ）在多个实例上面加锁，从而避免这个问题。（很少用，性能很差，而且很复杂，很繁琐。）如果非要保证数据的一致性，可以使用zookeeper来实现。</p>
+<h2 id="七、redis集群方案">七、redis集群方案</h2>
+<h3 id="分类">分类</h3>
+<ul>
+<li>主从复制</li>
+<li>哨兵模式</li>
+<li>Redis分片集群</li>
+</ul>
+<h3 id="主从复制">主从复制</h3>
+<p><strong>介绍一下主从复制？</strong></p>
+<p>单节点Redis的并发能力是有上限的，要进一步提高Redis的并发能力，可以搭建主从集群，实现<strong>读写分离。<strong>一般都是</strong>一主多从</strong>，<strong>主节点负责写数据</strong>，<strong>从节点负责读数据</strong>，主节点写入数据之后，需要把数据同步到从节点中。</p>
+<p><img src="https://qjw-00.oss-cn-guangzhou.aliyuncs.com/%E4%B8%AA%E4%BA%BA%E4%BD%BF%E7%94%A8%E5%AD%98%E5%82%A8/%E9%9B%86%E7%BE%A4.jpg" srcset="/pingpinghome/img/loading.gif" lazyload alt=""></p>
+<p>主从全量同步。直接看图吧。</p>
+<ul>
+<li><strong>全量同步：<strong>slaver发出请求，master判断是否为同一个</strong>集群id</strong>（是否第一次接收），如果是，就返回版本信息，并foke一个程序进行RDB生成和传递回去。slaver接收到版本后保存，随后清空数据用RDB加载数据。同时在执行上面过程中，如果数据有更行，master节点会发送执行期间的日志文件给slaver，slaver执行之后保持同步。</li>
+<li><strong>增量同步：<strong>如果是第二次的话，这个过程有点区别。slaver发出请求，master判断是否为同一个</strong>集群id</strong>，发现不是。master节点会发送执行期间的日志文件给slaver，slaver执行之后保持同步。</li>
+<li>💡 笔记:需要注意的是，判断是不是第一次的一句是看集群id，判断日志文件的多少用的是偏移量。</li>
+</ul>
+<p><img src="https://qjw-00.oss-cn-guangzhou.aliyuncs.com/%E4%B8%AA%E4%BA%BA%E4%BD%BF%E7%94%A8%E5%AD%98%E5%82%A8/%E4%B8%BB%E4%BB%8E%E5%85%A8%E9%87%8F%E5%90%8C%E6%AD%A5.jpg" srcset="/pingpinghome/img/loading.gif" lazyload alt=""></p>
+<h3 id="哨兵模式">哨兵模式</h3>
+<p>哨兵的构成：</p>
+<ul>
+<li>
+<p>哨兵也是<strong>集群</strong>的，至少三台</p>
+<ul>
+<li><strong>监控</strong>：哨兵sentinel会不断的检查master和slave是否按照预期工作</li>
+<li><strong>自动故障恢复</strong>：如果master故障，sentinel会将一个slave升级为master，当故障恢复后，也以新的master为主。</li>
+<li><strong>通知</strong>：sentinel充当redis客户端的服务来发现源，当集群发生故障转移时，会将最新消息推送给redis客户端（说人话就是不需要对代码进行修改，故障的时候会自动分配master）</li>
+</ul>
+</li>
+<li>
+<p><strong>服务状态监控</strong></p>
+<p>sentinel基于<strong>心跳机制</strong>监测服务状态，每隔<strong>1s</strong>向集群的每个实例发生ping命令：</p>
+<ul>
+<li>主观下线：一台发现实例未在规定的时间响应</li>
+<li>客观下线：超过指定数量（quorum）（一般是哨兵的一半以上（n/2+1））都认为主观下线，那么就认为是客观下线。</li>
+</ul>
+<p>当判断下线之后，哨兵就会开始挑选新的master</p>
+<ul>
+<li>判断主从节点断开时间的长短（越短越好），超过指定时间排除</li>
+<li>判断优先级（slave-priority），越小越高</li>
+<li><strong>如果优先级一致，判断slave节点的offset值，越大优先级越高（也就是数据越多越好）</strong></li>
+<li>最后判断id运行的大小，越小优先级越高（这个无所谓）</li>
+</ul>
+</li>
+<li>
+<p><strong>脑裂问题</strong></p>
+<p>所谓的脑裂，就是当客户端断网之后（处于不同的网络分区），哨兵ping不通master，以为master挂了，所以把slave升级为master。（此时原来的master依旧可以写），等网络恢复之后，原来的master就被强制降级为slave。导致<strong>数据可能丢失</strong>。</p>
+<p><strong>解决办法</strong>：</p>
+<ul>
+<li>min-replicas-write 1 表示<strong>最少的salve节点</strong>为1个。</li>
+<li>min-replicas-max-lag 5 表示<strong>数据复制和同步的延迟</strong>不超过5秒。</li>
+<li>这样设置之后，就导致<strong>旧的master</strong>写入请求的时候因为不符合上述的两个条件<strong>被拒绝</strong>，写入请求就会到<strong>新的master上，从而解决脑裂的问题</strong></li>
+</ul>
+</li>
+</ul>
+<h3 id="分片集群">分片集群</h3>
+<p>主从和哨兵可以解决高可用、高并发读的问题。</p>
+<p>但是依然有两个问题没有解决：</p>
+<ul>
+<li><strong>海量数据存储问题</strong></li>
+<li><strong>高并发写的问题</strong></li>
+</ul>
+<p>使用分片集群可以解决上述问题，<strong>分片集群特征</strong>（作用）：</p>
+<ul>
+<li>集群中有多个master,每个masterf保存不同数据</li>
+<li>每个master都可以有多个slave节点</li>
+<li>master之间通过ping监测彼此健康状态（代替哨兵）</li>
+<li>客户端请求可以访问集群<strong>任意节点</strong>，<strong>最终都会被转发到正确节点</strong></li>
+</ul>
+<p><strong>Redis分片集群中数据是怎么存储和读取的？</strong></p>
+<p>Redis分片集群引入了哈希槽的概念，Redis集群有<strong>16384</strong>个哈希槽，每个key通过CRC16校验后对16384取模来<br>
+决定放置哪个槽，集群的每个节点负责一部分hash槽。（<strong>有有效值看有效值，没有看key哈希值与16384取模</strong>）</p>
+<h3 id="redis为什么快">redis为什么快</h3>
+<ul>
+<li>
+<p><strong>因为它是单线程，避免不必要的线程切换和竞争条件，同时不用考虑线程安全问题</strong></p>
+</li>
+<li>
+<p><strong>存内存操作，执行快</strong></p>
+</li>
+<li>
+<p><strong>IO多路复用，非阻塞IO</strong>（例如bgsave和bgrewriteaof都是后台执行）</p>
+<ul>
+<li>
+<p>内核空间和外核空间</p>
+<ul>
+<li>内核空间：几乎具备所有权限的系统空间</li>
+<li>外核空间：用户的操作空间</li>
+<li>内核空间是中转站：外核空间-内核空间-硬件</li>
+</ul>
+<p><img src="https://qjw-00.oss-cn-guangzhou.aliyuncs.com/%E4%B8%AA%E4%BA%BA%E4%BD%BF%E7%94%A8%E5%AD%98%E5%82%A8/%E5%86%85%E6%A0%B8%E7%A9%BA%E9%97%B4.jpg" srcset="/pingpinghome/img/loading.gif" lazyload alt=""></p>
+</li>
+<li>
+<p>阻塞IO</p>
+<p>在等待数据和准备数据的过程中是阻塞的，在拷贝数据的过程中也是阻塞的。</p>
+</li>
+<li>
+<p>非阻塞IO</p>
+<p>在等待数据和准备数据的过程中不是阻塞的，后面一样。但cpu消耗大</p>
+</li>
+<li>
+<p><strong>IO多路复用</strong></p>
+<p><strong>单个线程可以一次性监听多个socket</strong>，虽然两个都是阻塞，但是一旦某个socket可读就会通知，避免无效等待。<strong>节省cpu</strong>，底层用epoll实现，在通知socket就绪的同时也通知是哪个socket。提升了性能</p>
+<p>io多路复用的实现方式</p>
+<ul>
+<li>
+<p>select</p>
+</li>
+<li>
+<p>poll</p>
+</li>
+<li>
+<p>epoll</p>
+<p>前两个都是通知系统但没有携带socket，需要一个个去找，epoll则会在通知系统就绪的时候提供socket的信息</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>Redis网络模型</p>
+<p>就是使用l/O多路复用结合事件的处理器来应对多个Socketi请求</p>
+<blockquote>
+<p><strong>连接应答处理器</strong></p>
+<p><strong>命令回复处理器</strong>，在Redis6.0之后，为了提升更好的性能，使用了多线程来处理回复事件<br>
+<strong>命令请求处理器</strong>，在Rdis6.0之后，将命令的转换使用了多线程，增加命令转换速度，在命令执行的时候，依然是单线程</p>
+</blockquote>
+</li>
+</ul>
+<p><a target="_blank" rel="noopener" href="https://heuqqdmbyk.feishu.cn/wiki/V45ewmbN6i8nm8kNl01c7qClnTc">Redis篇 - 飞书云文档</a></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/pingpinghome/categories/%E9%9D%A2%E8%AF%95%E7%9F%A5%E8%AF%86/" class="category-chain-item">面试知识</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/pingpinghome/tags/%E5%AD%A6%E4%B9%A0%E8%BF%87%E7%A8%8B/" class="print-no-link">#学习过程</a>
+      
+        <a href="/pingpinghome/tags/redis/" class="print-no-link">#redis</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>redis知识总结</div>
+      <div>https://pink-pigpig.github.io/pingpinghome/2025/07/23/redis知识总结/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>pink-pigpig</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年7月23日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/pingpinghome/2025/07/24/MySQL%E7%9F%A5%E8%AF%86%E6%80%BB%E7%BB%93/" title="MySQL知识总结">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">MySQL知识总结</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/pingpinghome/2025/07/21/hexo%E9%83%A8%E7%BD%B2vscode/" title="hexo部署vscode">
+                        <span class="hidden-mobile">hexo部署vscode</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/pingpinghome/js/events.js" ></script>
+<script  src="/pingpinghome/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/pingpinghome/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/pingpinghome/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/pingpinghome/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

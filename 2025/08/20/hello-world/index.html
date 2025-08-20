@@ -1,0 +1,663 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/pingpinghome/img/fluid.png">
+  <link rel="icon" href="/pingpinghome/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="pink-pigpig">
+  <meta name="keywords" content="个人博客，前端，后端，开发者">
+  
+    <meta name="description" content="欢迎来到我的个人博客，本博客主要用于个人学习和笔记展示，方便浏览一路走过来的点点滴滴，如果你有兴趣和我交流，请在github中搜索pink-pigpig给我留言。顺便测试一下链接我的github 简单说一些 一些碎碎念 1测试一下代码块是不是有高亮显示liang 目前安排  [x] 前端vue3 [x] 后端springBoot [x] 学习前端相关组件——router、vue3、vuex、axi">
+<meta property="og:type" content="article">
+<meta property="og:title" content="你好，我的个人介绍？">
+<meta property="og:url" content="https://pink-pigpig.github.io/pingpinghome/2025/08/20/hello-world/index.html">
+<meta property="og:site_name" content="猪博客">
+<meta property="og:description" content="欢迎来到我的个人博客，本博客主要用于个人学习和笔记展示，方便浏览一路走过来的点点滴滴，如果你有兴趣和我交流，请在github中搜索pink-pigpig给我留言。顺便测试一下链接我的github 简单说一些 一些碎碎念 1测试一下代码块是不是有高亮显示liang 目前安排  [x] 前端vue3 [x] 后端springBoot [x] 学习前端相关组件——router、vue3、vuex、axi">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://qjw-00.oss-cn-guangzhou.aliyuncs.com/%E4%B8%AA%E4%BA%BA%E4%BD%BF%E7%94%A8%E5%AD%98%E5%82%A8/PixPin_2025-07-21_15-30-26.jpg">
+<meta property="article:published_time" content="2025-08-20T18:56:46.160Z">
+<meta property="article:modified_time" content="2025-08-20T18:56:46.160Z">
+<meta property="article:author" content="pink-pigpig">
+<meta property="article:tag" content="个人博客，前端，后端，开发者">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://qjw-00.oss-cn-guangzhou.aliyuncs.com/%E4%B8%AA%E4%BA%BA%E4%BD%BF%E7%94%A8%E5%AD%98%E5%82%A8/PixPin_2025-07-21_15-30-26.jpg">
+  
+  
+  
+  <title>你好，我的个人介绍？ - 猪博客</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/pingpinghome/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/pingpinghome/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/pingpinghome/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"pink-pigpig.github.io","root":"/pingpinghome/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/pingpinghome/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/pingpinghome/js/utils.js" ></script>
+  <script  src="/pingpinghome/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/pingpinghome/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/pingpinghome/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/pingpinghome/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/pingpinghome/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/pingpinghome/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/pingpinghome/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/pingpinghome/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="你好，我的个人介绍？"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-08-21 02:56" pubdate>
+          2025年8月21日 凌晨
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          974 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          9 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">你好，我的个人介绍？</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>欢迎来到我的个人博客，本博客主要用于个人学习和笔记展示，方便浏览一路走过来的点点滴滴，如果你有兴趣和我交流，请在github中搜索pink-pigpig给我留言。顺便测试一下链接<a target="_blank" rel="noopener" href="https://github.com/pink-pigpig">我的github</a></p>
+<h2 id="简单说一些">简单说一些</h2>
+<h3 id="一些碎碎念">一些碎碎念</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">测试一下代码块是不是有高亮显示liang<br></code></pre></td></tr></table></figure>
+<h3 id="目前安排">目前安排</h3>
+<ul>
+<li>[x] 前端vue3</li>
+<li>[x] 后端springBoot</li>
+<li>[x] 学习前端相关组件——router、vue3、vuex、axios、element</li>
+<li>[x] 学习后端相关组件——springBoot、mybatis、jwt、redis、</li>
+<li>[x] 语言：java、javascript、html、css、sql、TypeScript、mysql、微信小程序</li>
+<li>[ ] 目前其他想要学习的东西：jpa（听说和redis差不多，且看）</li>
+<li>[ ] 学习方向：ai方向的自动化开发流线（未接触，先写着。）</li>
+</ul>
+<h3 id="目前的项目">目前的项目</h3>
+<h4 id="赛诺公司——访客管理系统">赛诺公司——访客管理系统</h4>
+<ul>
+<li>vue3，springBoot，mybatis，jwt，redis，element，axios，oss，typescript，mysql等</li>
+</ul>
+<blockquote>
+<p>一款由赛诺公司牵头，提供需求文档，从零开始开发的项目。项目涉及软硬件管理，前后端开发，旨在全面考察个人开发能力。<br>
+这个项目是我第一次全栈开发的测试，独自完成前后端的所有开发，虽然项目不大，但一整套流程下来，对很多东西都有了感悟，比如，为什么需要前后端的接口文档、数据库设计、技术选型？为什么需要开发规范？以及为什么前后端需要沟通才可以顺利推进项目等。很多东西，只有自己完全去接触后才会有所理解。</p>
+<blockquote>
+<p>特别感谢我这个项目的搭档，陪我一起体会，一人前端一人后端，模拟整个开发的流程。</p>
+</blockquote>
+</blockquote>
+<hr>
+<ol>
+<li>从零自主搭建项目，运用vue3加element来实现前端页面的展示，运用SpringBoot快速开发后端。</li>
+<li>从零开始设计需求文档，项目接口文档，数据库表设计，根据文档开发等，熟悉项目开发流程，对开发流程有深刻理解。</li>
+<li>前端利用axios与nodejs来进行网络请求和服务代理，运用element实现图像展示，文件上传等功能。运用vue和ts语言来更好的实现对应的功能。</li>
+<li>后端运用jwt来进行拦截，实现用户鉴权，通过对token的验证来防止未授权访问</li>
+<li>运用aop来进行切面类开发，实现对通用字段的自动填写，和对接口的处理时间统计。通过redis来对一些频繁访问的数据进行缓存，减少对数据库的压力，同时对验证码这类时效性信息设计过期时间，提高系统安全性</li>
+<li>运用MyBatis对数据库进行操作，实现数据存储功能。</li>
+</ol>
+<hr>
+<h4 id="粉猪博客">粉猪博客</h4>
+<ul>
+<li>Vue、axios、ElementUI、vue-echarts、mavon-editor、vue-router、SpringBoot、SpringSecurity、MyBatis、部分接口遵循Restful风格、MySQL</li>
+</ul>
+<blockquote>
+<p>这个项目是我一直以来想做的，我认为这是一个很适合我开始的项目，可以记录自己一路学习的过程，也可以分享一些自己的事，顺便学习一下新的技术和开发方式。</p>
+</blockquote>
+<p>1.对与这个项目我想大家见怪不怪了，vue和springboot都是很熟悉的东西，所以学习起来很简单。<br>
+2.这次学习主要是在部署和怎么把网页托管上，我用的是gitpage，和hexo来进行搭建，所以过程很顺利。<br>
+3.学习用SpringSecurity来进行认证，学习用jpa来进行数据库操作。一方面是之前学的jwt有点区别，另一方面mybatis和jpa的用法也一样，所以学习起来很轻松。两者思想有所区别，但是很相似。<br>
+4.这个项目边做边学，日后会成为个人笔记和补充，后面添加新的项目也会在这里提一下。</p>
+<h3 id="学习路程">学习路程</h3>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>你好，我的个人介绍？</div>
+      <div>https://pink-pigpig.github.io/pingpinghome/2025/08/20/hello-world/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>pink-pigpig</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年8月21日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/pingpinghome/2025/08/12/HttpClient%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BD%BF%E7%94%A8/" title="HttpClient学习与使用">
+                        <span class="hidden-mobile">HttpClient学习与使用</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/pingpinghome/js/events.js" ></script>
+<script  src="/pingpinghome/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/pingpinghome/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/pingpinghome/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/pingpinghome/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
